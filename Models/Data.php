@@ -38,8 +38,12 @@
 			return $data_array;
 		}//End of getAll Method
 
-		function getByDes( $desc ){
-
+		function getDataByDescription( $desc ){
+			$conn = connection();
+                        $query = "SELECT Data WHERE description='".$des."'";
+                        $result = mysqli_query( $conn, $query );
+                        close( $conn );
+			return $result;
 		}//End of getByDes Method
 
 		function setValue( $id, $value ){

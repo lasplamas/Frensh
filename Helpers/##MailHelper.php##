@@ -1,0 +1,17 @@
+<?php
+	/***
+	* mailHelper class
+	* helper for managing mail messages
+	*****************************************/
+	class MailHelper{
+	      
+	      /***
+	      * sendMail
+	      * function for sending a mail to alert
+	      **********************************/
+	      public static function sendMail( $data ){
+	      	     
+	      }//End of sendMail function
+
+	}//End of MailHelper
+?>

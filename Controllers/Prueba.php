@@ -1,5 +1,5 @@
 <?php
-	require $_SERVER['DOCUMENT_ROOT'].'/Frensh/MySQL/connection.php';
+	require $_SERVER['DOCUMENT_ROOT'].'/Frensh/Helpers/MailHelper.php';
 
-	$conn = connection();
+	MailHelper::sendMail( 'ramiroG' );
 ?>

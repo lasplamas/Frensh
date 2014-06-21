@@ -71,6 +71,22 @@
                         close( $conn );
                 }//End of setValueByDescription
 
+		function getValueById( $id ){
+			 $conn = connection();
+
+			$controls = mysqli_query( $conn, "SELECT * FROM Regimen where regimenid=".$id );
+
+			$control = new Regimen();
+
+			while( $c = mysqli_fetch_array( $controls ) ){
+				$control->regimenlid = $c['regimenid'];
+				$control->description = $c['description'];
+				$control->value = $c['value'];
+			}
+
+			close( $conn );
+			return $control->value;
+		}//End of fu
 	}//End of Regimen Class
 
 ?>

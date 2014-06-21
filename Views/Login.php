@@ -1,6 +1,14 @@
-<html>
+<?php
+           session_start();
+	   if( isset( $_SESSION['username'] ) ){
+	      header("Location: /Frensh/index.php");
+	   }
+?>
+<!DOCTYPE html>
+<html leng="es">
 	<head>
-		<title>LogIn</title>
+	        <meta charset="utf-8" />
+	        <title>LogIn</title>
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
@@ -13,13 +21,13 @@
 	<body >
 		<div class="container">
 			<div id="all" align="center" class="cover-container" >
-				<h1>Log In!</h1><br />
+				<h1>Iniciar Sesión!</h1><br />
 				<div id="idLoginForm" class="inner-cover">
-					<input type="text" class="form-control" placeholder="User Name" required="true" autofocus="">
-					<input type="password" class="form-control" placeholder="Password" required="true">
+					<input id="txtUsername" type="text" class="form-control" placeholder="Nombre de Usuario" required autofocus />
+					<input id="txtPassword" type="password" class="form-control" placeholder="Contraseña" required />
 					<br />
 
-					<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+					<button id="bLogin" class="btn btn-lg btn-primary btn-block">Entrar</button>
 				</div>
 			</div>
 		</div>

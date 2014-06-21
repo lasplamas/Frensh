@@ -1,6 +1,9 @@
 //Global Variables
 var value=true;
-
+var real_values = new Array();
+var alerts = new Array();
+var automatic;
+var correo_disabled = true;
 /***
 * Every time!
 ***************/
@@ -15,6 +18,10 @@ $(function() {
 function startRefresh() {
     	setTimeout(startRefresh,1000);
 	act_actual_values();
+        validate_max_min();
+        validate_alerts();
+        set_automatic();
+        act_act_button();
 }//End of startRefresh function
 
 /****
@@ -22,10 +29,15 @@ function startRefresh() {
 ******************************/
 $(document).ready( function(){
 	
-	/***
+        /***
 	* Fill inputs with regimen values
 	***********************************************/
 	fill_regimen();
+
+        /***
+	* Fill input with mail 
+	***********************************************/
+	fill_correo();
 	
 	/***
 	* for for giving actions to buttons and disable inputs
@@ -40,27 +52,37 @@ $(document).ready( function(){
 			
 		 	var val_max = $( "#" + max.id ).val();
 			var val_min = $( "#" + min.id ).val();
+			if( $.isNumeric( val_max ) && $.isNumeric( val_min ) ){
+			    if( parseInt( val_max ) > parseInt( val_min ) ){
+
+				var name = $(this).parent().parent()[0];
 			
-			var name = $(this).parent().parent()[0];
-			
-			if( name.id == "row0" ){
-				setRegimen( "temp_max", val_max );
-				setRegimen( "temp_min", val_min );
-				$("#edit0").text( "Editar" );
-				$("#edit0").attr( "class", "btn btn-lg btn-info" );
-			}else if( name.id == "row1" ){
-				setRegimen( "hum_max", val_max );
-				setRegimen( "hum_min", val_min );
-				$("#edit1").text( "Editar" );
-                                $("#edit1").attr( "class", "btn btn-lg btn-info" );
-			}else if( name.id == "row2" ){
-				setRegimen( "lux_max", val_max );
-				setRegimen( "lux_min", val_min );
-				$("#edit2").text( "Editar" );
-                                $("#edit2").attr( "class", "btn btn-lg btn-info" );
-			}
-			$(this).prop( "disabled", true );
-			$(this).parent().parent().children("div").children("input").prop( "disabled", true );			
+				if( name.id == "row0" ){
+				    setRegimen( "temp_max", val_max );
+				    setRegimen( "temp_min", val_min );
+				    $("#edit0").text( "Editar" );
+				    $("#edit0").attr( "class", "btn btn-lg btn-info" );
+				}else if( name.id == "row1" ){
+				    setRegimen( "hum_max", val_max );
+				    setRegimen( "hum_min", val_min );
+				    $("#edit1").text( "Editar" );
+                                    $("#edit1").attr( "class", "btn btn-lg btn-info" );
+				}else if( name.id == "row2" ){
+				    setRegimen( "lux_max", val_max );
+				    setRegimen( "lux_min", val_min );
+				    $("#edit2").text( "Editar" );
+                                    $("#edit2").attr( "class", "btn btn-lg btn-info" );
+				}
+				$(this).prop( "disabled", true );
+				$(this).parent().parent().children("div").children("input").prop( "disabled", true );			
+
+			    }else{
+				alert( "Error: El valor maximo no puede ser menor que el minimo!!!" );
+			    }
+
+			 } else {
+			     alert( "Error: Los valores no son numéricos!!!" );
+			 }
 		});//End of click function
 
 		$("#row"+j).children("div").children("#edit"+j).click( function(){
@@ -78,7 +100,9 @@ $(document).ready( function(){
                         	$(this).attr( "class", "btn btn-lg btn-info" );
                         	$(this).prop( "disabled", false );
 			}
-		});
+
+		});//End of another click function
+
 	}//End of for
 
 	/***
@@ -88,6 +112,7 @@ $(document).ready( function(){
 	$('#estadoGeneral').show();
 	$('#estadoHistorico').hide();
 	$('#programarRegimen').hide();
+	$('#preferencias').hide();
 	
 	/***
 	* ajax function for knowing the real value of the activation button
@@ -119,7 +144,99 @@ $(document).ready( function(){
         ************************************************/
 	$('#bProgramarRegimen').click( function(){ bProgramarRegimen_action(); } );
 
+        /***
+        * bProgramarRegimen click action
+        ************************************************/
+	$('#bPreferencias').click( function(){ bPreferencias_action(); } );
+
+        /***
+        * editarCorreo click action
+        ************************************************/
+	$('#editCorreo').click( function(){ editarCorreo_action(); } );
+
+        /***
+        * saveCorreo click action
+        ************************************************/
+	$('#saveCorreo').click( function(){ saveCorreo_action(); } );
+
 });//End of ready function
+
+function fill_correo(){
+    $.ajax({
+	'dataType' : 'json',
+	'type' : 'GET',
+	'url' : '/Frensh/Controllers/ControlController.php',
+	'data' : { 'action' : 'getValueById', 'id' : 7 },
+	'success' : function(data){
+	    $( '#txtCorreo' ).val( data );
+	}
+    });
+    $('#saveCorreo').prop( 'disabled', true );
+    $('#txtCorreo').prop( 'disabled', true );
+}
+
+function editarCorreo_action(){
+    
+    correo_disabled = !correo_disabled;
+    $('#saveCorreo').prop( 'disabled', correo_disabled );
+    $('#txtCorreo').prop( 'disabled', correo_disabled );
+    
+    if(!correo_disabled){
+	$('#editCorreo').attr( "class" , "btn btn-lg btn-danger");
+    }else {
+	$('#editCorreo').attr( "class" , "btn btn-lg btn-info");
+    }
+}
+
+function saveCorreo_action(){
+     var txtCorreo = $('#txtCorreo').val();
+     $.ajax({
+	'dataType' : 'json',
+	'type' : 'GET',
+	'url' : '/Frensh/Controllers/ControlController.php',
+	'data' : { 'action' : 'setControlValue', 'id' : 7, 'value' : txtCorreo },
+	'success' : function(data){
+	        editarCorreo_action();
+	        $('#saveCorreo').prop( 'disabled', true );
+	        $('#txtCorreo').prop( 'disabled', true );
+	}
+    });
+}
+/***
+* validate_alerts
+* Function to validate the content of the alerts.
+* @params none
+* @return none
+*******************************/
+function validate_alerts(){
+       for( var i = 0; i < 3; i++ ){
+	    if( alert[i] == 'alta' ) {
+		$(".column" + (i+1) ).children("div").attr( "class" , "alert alert-danger");
+	    }else if( alert[i] == 'baja' ) {
+		$(".column" + (i+1) ).children("div").attr( "class", "alert alert-info");
+	    }else {
+		$(".column" + (i+1) ).children("div").attr( "class" , "alert alert-success");
+	    }
+       }//End of filling real values to a global array
+}//End of validate_alerts function
+
+/***
+* validate_max_min
+* Function that checks that all the values are between the maxs and the mins
+* @param none
+* @return none
+************************************/
+function validate_max_min(){
+       for( var i = 0; i < 3; i++ ){
+	   if( real_values[i] >= parseInt( $("#max"+i).val() ) ){
+	       alert[i] = "alta";
+	   }else if( real_values[i] <= parseInt( $("#min"+i).val() ) ){
+	       alert[i] = "baja";
+	   }else {
+	       alert[i] = "normal";
+	   }
+       }//End of filling real values to a global array
+}//End of the validate_max_min function
 
 /***
 * setRegimen
@@ -132,9 +249,9 @@ function setRegimen( des, value ){
 
 	$.ajax({
 		'dataType' : 'json',
-		'type' : 'POST',
-		'url' : '../Frensh/Controllers/setRegimen.php',
-		'data' : { 'action':'setValue', 'des': ''+des, 'value': ''+value },
+		'type' : 'GET',
+		'url' : '../Frensh/Controllers/RegimenController.php',
+		'data' : { 'action':'setValueByDescription', 'des': ''+des, 'value': ''+value },
 		'success' : function( data ){
 			if( data == 'success' ){
 				alert( "Regimen Guardado!" );
@@ -155,7 +272,7 @@ function fill_regimen(){
 	$.ajax({
 		'dataType' : 'json',
 		'type' : 'GET',
-		'url' :  '../Frensh/Controllers/getRegimen.php',
+		'url' :  '../Frensh/Controllers/RegimenController.php',
 		'data' : { 'action' : 'getAll' },
 		'success' : function( data ){
 			for( var i = 0; i < 3 ; i++ ){
@@ -180,21 +297,25 @@ function act_actual_values(){
         *****************************************************************/
         $.ajax( {
                 'dataType' : 'json',
-                'type' : 'POST',
-                'url' : '../Frensh/Controllers/getData.php',
+                'type' : 'GET',
+                'url' : '../Frensh/Controllers/DataController.php',
                 'data' : { 'action' : 'getAll' },
                 'success' : function( data ){
 
                         $("#lTemp").empty();
                         $("#lTemp").append(data['0']['value']+"&deg;");
-
+		        
                         $("#lHum").empty();
                         $("#lHum").append(data['1']['value']+"&#37;");
 
                         $("#lLuz").empty();
                         $("#lLuz").append(data['2']['value']+"lux");
 
-                }
+		        for( var i = 0; i < 3; i++ ){
+			    real_values[i] = parseInt( data[i]['value'] );
+			}//End of filling real values to a global array
+                
+		}//End of success function
         });//End of ajax function
 }//End of act_actual_values function
 
@@ -209,8 +330,8 @@ function act_act_button(){
         $.ajax( {
                 'dataType': 'json',
                 'type': 'GET',
-                'url': '../Frensh/Controllers/getControlValue.php',
-                'data': { 'id' : '1' },
+                'url': '../Frensh/Controllers/ControlController.php',
+                'data': { 'action' : 'getValueById', 'id' : '1' },
                 'success': function( data ){
                         if( data == 'On'){
                                 value = true;
@@ -221,7 +342,7 @@ function act_act_button(){
                                 $('#bActivar').val("Prender");
                                 $('#bActivar').attr('class', 'btn btn-lg btn-success');
                         }
-                }
+                }//End of success function
         });//End of ajax funtion
 }//End of ajax function
 
@@ -233,10 +354,12 @@ function bEstadoGeneral_action(){
 	$('#bEstadoGeneral').attr('class', 'active');
 	$('#bEstadoHistorico').attr('class', '');
 	$('#bProgramarRegimen').attr('class', '');
-        
+        $('#bPreferencias').attr('class', '');
+
 	$('#estadoGeneral').show();
         $('#estadoHistorico').hide();
         $('#programarRegimen').hide();
+        $('#preferencias').hide();
 }//End of bEstadoGeneral_action Function
 
 /***
@@ -247,14 +370,16 @@ function bEstadoHistorico_action(){
 	$('#bEstadoGeneral').attr('class', '');
         $('#bEstadoHistorico').attr('class', 'active');
         $('#bProgramarRegimen').attr('class', '');
+        $('#bPreferencias').attr('class', '');
 
         $('#estadoGeneral').hide();
         $('#estadoHistorico').show();
         $('#programarRegimen').hide();
+        $('#preferencias').hide();
 }//End of bEstadoHistorico_action Function
 
 /***
-* bEstadoGeneral_action
+* bProgramarRegimen_action
 * Function for bProgramarRegimen Actions
 ********************************/
 function bProgramarRegimen_action(){
@@ -262,12 +387,31 @@ function bProgramarRegimen_action(){
 	$('#bEstadoGeneral').attr('class', '');
         $('#bEstadoHistorico').attr('class', '');
         $('#bProgramarRegimen').attr('class', 'active');
+        $('#bPreferencias').attr('class', '');
 
         $('#estadoGeneral').hide();
         $('#estadoHistorico').hide();
         $('#programarRegimen').show();
+        $('#preferencias').hide();
 
 }//End of bProgramarRegimen_action Function
+
+/***
+* bPreferencias_action
+* Function for bPreferencias Actions
+********************************/
+function bPreferencias_action(){
+	
+	$('#bEstadoGeneral').attr('class', '');
+        $('#bEstadoHistorico').attr('class', '');
+        $('#bProgramarRegimen').attr('class', '');
+        $('#bPreferencias').attr('class', 'active');
+
+        $('#estadoGeneral').hide();
+        $('#estadoHistorico').hide();
+        $('#programarRegimen').hide();
+        $('#preferencias').show();
+}//End of bPreferencias_action Function
 
 /***
 * Turn 
@@ -287,8 +431,8 @@ function bActivar_action(){
 	$.ajax( {
 		'dataType': 'json',
 		'type': 'GET',
-		'url': '../Frensh/Controllers/setControlValue.php',
-		'data': { 'id' : '1' , 'value': val },
+		'url': '../Frensh/Controllers/ControlController.php',
+		'data': { 'action' : 'setControlValue' , 'id' : '1' , 'value': val },
 		'success': function( data ){
 			console.log( data );
 			if( data == "On" ){
@@ -301,3 +445,29 @@ function bActivar_action(){
 		}	
 	});
 }//End of Turn Function
+
+
+
+/***
+*
+*****************************/
+function set_automatic(){
+    /***
+        * ajax function for knowing the real value of the activation button
+        *******************************************************************/
+        $.ajax( {
+                'dataType': 'json',
+                'type': 'GET',
+                'url': '../Frensh/Controllers/ControlController.php',
+                'data': { 'action' : 'getValueById', 'id' : '3' },
+                'success': function( data ){
+                        if( data == 'On'){
+                                automatic = true;
+			        $("#bActivar").prop( "disabled", true );
+                        }else{
+                                automatic = false;
+			        $("#bActivar").prop( "disabled", false );
+                        }
+                }//End of success function
+        });//End of ajax funtion
+}//End of set_automatic

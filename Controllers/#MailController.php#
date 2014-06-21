@@ -1,0 +1,10 @@
+<?php
+
+	/***
+	* class Mai
+	*
+	***************************************/
+	class MailController{
+
+	}//End of mail controller class
+?>

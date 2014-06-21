@@ -1,8 +1,17 @@
+<?php
+   
+           session_start();
+	   if( !isset( $_SESSION['username'] ) ){
+	      header("Location: /Frensh/Views/Login.php");
+	   }session_write_close();
+
+?>
 <!DOCTYPE html>
-<html>
+<html lang="es" >
 
 	<head>
-		<!-- Latest compiled and minified CSS -->
+	        <meta charset="utf-8" /> 
+	        <!-- Latest compiled and minified CSS -->
                 <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
                 <!-- Optional theme -->
@@ -15,15 +24,24 @@
 
 
 		<title>Control de monitoreo</title>
+
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-    		<script type="text/javascript" src="js/jchartfx.system.js"></script>
-    		<script type="text/javascript" src="js/jchartfx.coreVector.js"></script>
-
-		<script src="js/buttonHandler.js" ></script>
-
+		<script type="text/javascript" src="jquery.min.js"></script>
+		<script type="text/javascript" src="jquery.jqplot.min.js"></script>
+		<script type="text/javascript" src="plugins/jqplot.dateAxisRenderer.min.js"></script>
+		<script type="text/javascript" src="plugins/jqplot.logAxisRenderer.min.js"></script>
+		<script type="text/javascript" src="plugins/jqplot.canvasTextRenderer.min.js"></script>
+		<script type="text/javascript" src="plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+		<script type="text/javascript" src="plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
+		<script type="text/javascript" src="plugins/jqplot.categoryAxisRenderer.min.js"></script>
+		<script type="text/javascript" src="plugins/jqplot.barRenderer.min.js"></script>
+		<link class="include" rel="stylesheet" type="text/css" href="jquery.jqplot.min.css" />
+		
+		<script type="text/javascript" src="scriptchart.js"></script>
+		<script src="js/buttonHandler.js" ></script>		
 	</head>
-
+	
 	<body style>
 		<!-------- Menu Bar ------>
 		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -39,18 +57,13 @@
         			</div>
         			<div class="navbar-collapse collapse">
           				<ul class="nav navbar-nav navbar-right">
-            					<li><a href="#">Config</a></li>
-            					<li><a href="#">Cerrar Sesion</a></li>
-            					<li><a href="#">Ayuda</a></li>
+            					<li><a href="<?php session_start(); session_destroy(); ?>">Cerrar Sesion</a></li>
           				</ul>
-          				<form class="navbar-form navbar-right">
-            					<input type="text" class="form-control" placeholder="Buscar...">
-          				</form>
         			</div>
       			</div>
     		</div>
 
-                </div><br/><br/>
+                <br/><br/>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-3 col-md-2 sidebar">
@@ -58,6 +71,7 @@
             					<li id="bEstadoGeneral" class="active"><a href="#">Estado General</a></li>
             					<li id="bEstadoHistorico"><a href="#">Estado Historico</a></li>
             					<li id="bProgramarRegimen"><a href="#">Programar Regimen</a></li>
+            					<li id="bPreferencias"><a href="#">Preferencias</a></li>
           				</ul>
         			</div>
 				<!----------Ventana Estado General------------>
@@ -66,32 +80,28 @@
 
 					<div class="column1">
 
-						<div class="imagen"></div>
-
-
-						<div id="lbTemperadura" class="alert alert-info">
+						<div id="lbTemperadura" class="alert alert-success">
                                                         <strong> Temperatura Actual: <p id="lTemp" style="color:#6c77b5"></p></strong>
                                                 </div>
+
 					</div>
 
 					<div class="column2">
 
-						<div class="imagen1"></div>
-
-						<div id="lbHumedad" class="alert alert-info">
+						<div id="lbHumedad" class="alert alert-success">
                                                         <strong> Humedad Actual: <p id="lHum" style="color:#6c77b5"></p></strong>
                                                 </div>
+
 					</div>
 
 					<div class="column3">
 
-
-						<div class="imagen2">
-
-						<div id="lbLuz" class="alert alert-info">
+						<div id="lbLuz" class="alert alert-success">
 							<strong> Luz Actual: <p id="lLuz" style="color:#6c77b5"></p></strong>
 						</div>
+
 					</div>
+
 					<hr />
 					<h2>Controles</h2><hr/>
 					<h3 style="color:#29bdbd">Ventiladores de Respaldo
@@ -101,8 +111,13 @@
 			</div>
 			<!----------Ventana Estado Historico---------->
                         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="estadoHistorico">
+
 				<h1 class="page-header">Estado Historico</h1>
-				<div id="ChartDiv" style="width:600px;height:400px;display:inline-block"></div>
+
+				<div id="chartTemp"style= "height:260px;" align="center"></div>
+				<div id="chartHum" style= "height:260px;" align="center"></div>
+				<div id="chartLux" style= "height:260px;" align="center"></div>
+				
                         </div>
 
                         <!----------Ventana de Programar Regimen------>
@@ -137,9 +152,26 @@
                                 </div>
 
                       	</div>
+			<!----------Ventana Preferencias---------->
+                        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="preferencias">
+
+				<h1 class="page-header">Preferencias</h1>
+
+				<div class="row" id="row2" >
+                                        <div class="col-xs-6 col-sm-3"><h3>Correo Para Alertas: </h3></div>
+                                        <div class="col-xs-6 col-sm-3"><input type="text" class="form-control" placeholder="Correo Electronico" id="txtCorreo"/></div>
+                                        <div class="col-xs-6 col-sm-3">
+                                                <button type="button" class="btn btn-lg btn-info" id="editCorreo">Editar</button>
+                                                <button type="button" class="btn btn-lg btn-primary" id="saveCorreo">Guardar</button>
+                                        </div>
+                                </div>
+
+
+                        </div>
+
 
 		</div>
-
+		
 		<!-- Latest compiled and minified JavaScript -->
                 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 		<script src="http://getbootstrap.com/assets/js/docs.min.js"></script>
