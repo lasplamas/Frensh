@@ -1,6 +1,7 @@
 <?php
-	//require $_SERVER['DOCUMENT_ROOT'].'/Frensh/MySQL/connection.php';
-
+	/***
+	* Register class model
+	***************/
 	class Register {
 
 		//Global attributes

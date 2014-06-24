@@ -22,6 +22,7 @@ function startRefresh() {
         validate_alerts();
         set_automatic();
         act_act_button();
+        estado();
 }//End of startRefresh function
 
 /****
@@ -160,6 +161,16 @@ $(document).ready( function(){
 	$('#saveCorreo').click( function(){ saveCorreo_action(); } );
 
 });//End of ready function
+
+function estado(){
+    if( automatic ){
+	$( '#estadoVentiladores' ).text( 'Automatico' );
+    }else if( value ){
+	$( '#estadoVentiladores' ).text( 'Prendidos' );
+    }else {
+	$( '#estadoVentiladores' ).text( 'Apagados' );	
+    }
+}//End of estado Function
 
 function fill_correo(){
     $.ajax({
@@ -434,7 +445,6 @@ function bActivar_action(){
 		'url': '../Frensh/Controllers/ControlController.php',
 		'data': { 'action' : 'setControlValue' , 'id' : '1' , 'value': val },
 		'success': function( data ){
-			console.log( data );
 			if( data == "On" ){
 				$('#bActivar').val("Apagar");
 				$('#bActivar').attr('class', 'btn btn-lg btn-danger');

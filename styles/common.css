@@ -1,0 +1,67 @@
+
+#idLoginForm {
+    
+    background : rgba( 3, 70, 119, 0.5 );
+    border-radius : 1em;
+    margin : 1em auto;
+    padding: 1em;
+    width: 60%;
+
+}
+
+#navBar {
+
+    background : rgba( 3, 70, 119, 0.9 );
+
+}
+
+#navBar a{
+    
+   color : #FFF;
+
+}
+
+#navBar a:hover{
+    
+   color : #CCC;
+
+}
+
+.maximo{
+
+    color: #a94442;
+
+}
+
+.minimo{
+
+    color: #31708f;
+
+}
+
+.cuadritoMax{
+    
+    background-color: #a94442;
+    width : 20px;
+    height : 20px;
+    float: left;
+
+}
+
+.cuadritoMin{
+    
+    background-color: #31708f;
+    width : 20px;
+    height : 20px;
+    float: left;
+
+}
+
+.cuadritoNorm{
+
+    background-color: #3c763d;
+    width : 20px;
+    height : 20px;
+    float: left;
+
+}

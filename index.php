@@ -21,14 +21,13 @@
 
 		<link rel="stylesheet" type="text/css" href="styles/Attributes/jchartfx.attributes.smoothness.css" />
 		<link rel="stylesheet" type="text/css" href="styles/Palettes/jchartfx.palette.smoothness.css" />
-
-
+		<link rel="stylesheet" type="text/css" href="styles/common.css" />
 		<title>Control de monitoreo</title>
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-		<script type="text/javascript" src="jquery.min.js"></script>
-		<script type="text/javascript" src="jquery.jqplot.min.js"></script>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/jquery.jqplot.min.js"></script>
 		<script type="text/javascript" src="plugins/jqplot.dateAxisRenderer.min.js"></script>
 		<script type="text/javascript" src="plugins/jqplot.logAxisRenderer.min.js"></script>
 		<script type="text/javascript" src="plugins/jqplot.canvasTextRenderer.min.js"></script>
@@ -36,15 +35,15 @@
 		<script type="text/javascript" src="plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
 		<script type="text/javascript" src="plugins/jqplot.categoryAxisRenderer.min.js"></script>
 		<script type="text/javascript" src="plugins/jqplot.barRenderer.min.js"></script>
-		<link class="include" rel="stylesheet" type="text/css" href="jquery.jqplot.min.css" />
+		<link class="include" rel="stylesheet" type="text/css" href="styles/jquery.jqplot.min.css" />
 		
-		<script type="text/javascript" src="scriptchart.js"></script>
+		<script type="text/javascript" src="js/scriptchart.js"></script>
 		<script src="js/buttonHandler.js" ></script>		
 	</head>
 	
 	<body style>
 		<!-------- Menu Bar ------>
-		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div id="navBar" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       			<div class="container-fluid">
         			<div class="navbar-header">
           				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -101,12 +100,15 @@
 						</div>
 
 					</div>
-
+					<small><div class="cuadritoNorm"></div> &nbsp;Temperatura normal. </small><br/>
+					<small><div class="cuadritoMax"></div> &nbsp;Temperatura alta. </small><br/>
+					<small><div class="cuadritoMin"></div> &nbsp;Temperatura baja. </small>
 					<hr />
 					<h2>Controles</h2><hr/>
-					<h3 style="color:#29bdbd">Ventiladores de Respaldo
+					<h3 style="color:#29bdbd">Ventiladores de Respaldo</h3>
+					<h4 sytle="color:rgb(3, 70, 119);">Estado: <label id="estadoVentiladores"></label></h4>
+					
 					<input id="bActivar" value="SET" type="button" class="btn btn-lg btn-success"/>
-					</h3>
 				</div>
 			</div>
 			<!----------Ventana Estado Historico---------->
@@ -125,8 +127,8 @@
                         	<h1 class="page-header">Programar Regimen</h1>
 				<div class="row" id="row0" >
 					<div class="col-xs-6 col-sm-3"><h3>Temperatura</h3></div>
-					<div class="col-xs-6 col-sm-3"><h4>Maximo</h4><input type="text" class="form-control" id="max0"/></div>
-					<div class="col-xs-6 col-sm-3"><h4>Minimo</h4><input type="text" class="form-control" id="min0"/></div>
+					<div class="col-xs-6 col-sm-3"><h4 class="maximo">Maximo</h4><input type="text" class="form-control" id="max0"/></div>
+					<div class="col-xs-6 col-sm-3"><h4 class="minimo">Minimo</h4><input type="text" class="form-control" id="min0"/></div>
 					<div class="col-xs-6 col-sm-3"><br/>
 						<button type="button" class="btn btn-lg btn-info" id="edit0">Editar</button>
 						<button type="button" class="btn btn-lg btn-primary" id="save0">Guardar</button>
@@ -134,8 +136,8 @@
 				</div>
 				<div class="row" id="row1" >
                                         <div class="col-xs-6 col-sm-3"><h3>Humedad</h3></div>
-                                        <div class="col-xs-6 col-sm-3"><h4>Maximo</h4><input type="text" class="form-control" id="max1"/></div>
-                                        <div class="col-xs-6 col-sm-3"><h4>Minimo</h4><input type="text" class="form-control" id="min1"/></div>
+                                        <div class="col-xs-6 col-sm-3"><h4 class="maximo">Maximo</h4><input type="text" class="form-control" id="max1"/></div>
+                                        <div class="col-xs-6 col-sm-3"><h4 class="minimo">Minimo</h4><input type="text" class="form-control" id="min1"/></div>
                                         <div class="col-xs-6 col-sm-3"><br/>
                                                 <button type="button" class="btn btn-lg btn-info" id="edit1">Editar</button>
                                                 <button type="button" class="btn btn-lg btn-primary" id="save1">Guardar</button>
@@ -143,8 +145,8 @@
                                 </div>
 				<div class="row" id="row2" >
                                         <div class="col-xs-6 col-sm-3"><h3>Luminocidad</h3></div>
-                                        <div class="col-xs-6 col-sm-3"><h4>Maximo</h4><input type="text" class="form-control" id="max2"/></div>
-                                        <div class="col-xs-6 col-sm-3"><h4>Minimo</h4><input type="text" class="form-control" id="min2"/></div>
+                                        <div class="col-xs-6 col-sm-3"><h4 class="maximo">Maximo</h4><input type="text" class="form-control" id="max2"/></div>
+                                        <div class="col-xs-6 col-sm-3"><h4 class="minimo">Minimo</h4><input type="text" class="form-control" id="min2"/></div>
                                         <div class="col-xs-6 col-sm-3"><br/>
                                                 <button type="button" class="btn btn-lg btn-info" id="edit2">Editar</button>
                                                 <button type="button" class="btn btn-lg btn-primary" id="save2">Guardar</button>
@@ -156,15 +158,24 @@
                         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="preferencias">
 
 				<h1 class="page-header">Preferencias</h1>
-
+				<h3 class="page-header">Correo Para Alertas </h3> 
 				<div class="row" id="row2" >
-                                        <div class="col-xs-6 col-sm-3"><h3>Correo Para Alertas: </h3></div>
                                         <div class="col-xs-6 col-sm-3"><input type="text" class="form-control" placeholder="Correo Electronico" id="txtCorreo"/></div>
                                         <div class="col-xs-6 col-sm-3">
                                                 <button type="button" class="btn btn-lg btn-info" id="editCorreo">Editar</button>
                                                 <button type="button" class="btn btn-lg btn-primary" id="saveCorreo">Guardar</button>
                                         </div>
                                 </div>
+
+				<br /><br />
+				<h3 class="page-header">Cambiar Contraseña </h3> 
+				<div class="row" id="row2" >
+                                        <div class="col-xs-6 col-sm-3"><input type="text" class="form-control" placeholder="Nueva Contraseña" id="txtContraseña"/></div>
+                                        <div class="col-xs-6 col-sm-3">
+                                                <button type="button" class="btn btn-lg btn-info" id="editCont">Editar</button>
+                                                <button type="button" class="btn btn-lg btn-primary" id="saveCont">Guardar</button>
+                                        </div>
+                                </div><small> *La nueva contraseña se manadará al correo establecido en la parte de arriba.</small>
 
 
                         </div>

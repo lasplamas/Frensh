@@ -14,14 +14,14 @@
 
 		<!-- Optional theme -->
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-
+		<link rel="stylesheet" type="text/css" href="../styles/common.css" />
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
                 <script src="../js/login.js" ></script>
 	</head>
 	<body >
 		<div class="container">
 			<div id="all" align="center" class="cover-container" >
-				<h1>Iniciar Sesión!</h1><br />
+				<h1>Sistema de Monitoreo</h1><h2>Inicio de Sesión</h2>
 				<div id="idLoginForm" class="inner-cover">
 					<input id="txtUsername" type="text" class="form-control" placeholder="Nombre de Usuario" required autofocus />
 					<input id="txtPassword" type="password" class="form-control" placeholder="Contraseña" required />

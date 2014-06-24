@@ -1,0 +1,6 @@
+Errors:
+['error1']:'Usuario o Contraseña incorrecta.';
+['error2']:'Valores no númericos';
+['error3']:'El valor maximo no puede ser menor que el minimo.';
+['error4']:'El correo no cumple con el formato.';
+['error5']:'No ha introducido la contraseña.';
