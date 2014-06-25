@@ -1,0 +1,56 @@
+<?php
+	$_SERVER['DOCUMENT_ROOT'].'/MySQL/connection.php';
+
+	class Model{
+
+	      /***
+	      * getAll Method
+	      *	function for getting all the objects from the db
+	      *************************/
+	      public function getAll(){
+
+	      }//End of getAll function
+
+	      /***
+	      * getById
+	      *	function that returns object by id
+	      *************************/
+	      public function getById(){
+
+	      }//End of getById function
+
+	      /***
+	      * getByParameter
+	      * function that returns object by x parameter
+	      ****************************************/
+	      public function getByParameter( $param ){
+	      	     
+	      }//End of getByParameter function
+
+	      /***
+	      * add
+	      *	function that adds object to database
+	      *****************************/
+	      public function add( $model ){
+
+	      }//End of add function
+
+	      
+	      /***
+	      * remove
+	      * functiokn that removes from database an object by id
+	      ****************************/
+	      public function remove( $id ){
+
+	      }//End of remove function
+
+	      /***
+	      * update
+	      * function for updating the object to database
+	      ********************************************/	      
+	      public function update(  ){
+
+	      }//End of update method
+	      
+	}//End of Model class
+?>

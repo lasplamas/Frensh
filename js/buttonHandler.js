@@ -172,6 +172,10 @@ function estado(){
     }
 }//End of estado Function
 
+/***
+* fill_correo
+* function that fills the mail field with the one on the database
+********************************/
 function fill_correo(){
     $.ajax({
 	'dataType' : 'json',
@@ -184,8 +188,12 @@ function fill_correo(){
     });
     $('#saveCorreo').prop( 'disabled', true );
     $('#txtCorreo').prop( 'disabled', true );
-}
+}//End of fill_correo function
 
+/***
+* editar_correo_action
+* Actions for the mail button
+******************************/
 function editarCorreo_action(){
     
     correo_disabled = !correo_disabled;
@@ -197,7 +205,7 @@ function editarCorreo_action(){
     }else {
 	$('#editCorreo').attr( "class" , "btn btn-lg btn-info");
     }
-}
+}//End of editarCorreo_action
 
 function saveCorreo_action(){
      var txtCorreo = $('#txtCorreo').val();
@@ -459,7 +467,8 @@ function bActivar_action(){
 
 
 /***
-*
+* set_automatic
+* function that puts the system on automatic mode
 *****************************/
 function set_automatic(){
     /***
